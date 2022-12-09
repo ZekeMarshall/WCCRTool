@@ -1,0 +1,71 @@
+/*
+Theme color scheme from https://www.forestresearch.gov.uk/
+--theme-primary-color: #24062b;
+--theme-secondary-color: #6c207f;
+--theme-secondary-color-dark: #491656;
+--theme-tertiary-color: #ededed;
+--font-primary-color: #444;
+--font-secondary-color: #ededed;
+--font-header-color: #6c207f;
+--gold: #dcad7c;
+*/
+
+.navbar-white {
+  background-color: #491656 !important;
+}
+.fa.fa-bars {
+  color: #ffffff !important;
+}
+.sidebar-light-primary {
+  background-color: #491656 !important;
+}
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+  background-color: #6c207f !important;
+}
+
+.sidebar-light-primary .nav-sidebar>.nav-item>.nav-link {
+  background-color: #491656 !important;
+  color: #ffffff !important;
+}
+
+.sidebar-light-primary .nav-sidebar>.nav-item>.nav-link.active {
+  background-color: #ffffff !important;
+  color: #491656 !important;
+}
+
+.main-header.navbar.navbar-expand.navbar-light.navbar-white {
+  color: #ffffff !important;
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+}
+
+.handsontable table thead th {
+  background-color: #491656 !important;
+  color: white !important;
+  /*font-weight: bold !important;*/
+  font-size: 16px !important;
+}
+
+
+/* Currently unused
+
+.btn.btn-default.action-button.shiny-bound-input {
+    float: right !important;
+    background-color: #ffffff;
+    border-color: #ffffff;
+    color: #491656;
+    font-weight: 600;
+    font-size: 1.15rem;
+    padding: 0rem 0rem;
+}
+
+.card-title {
+    float: right;
+}
+
+.pt-2.px-3 {
+  float: right;
+
+}
+
+*/
