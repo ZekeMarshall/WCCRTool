@@ -1,17 +1,30 @@
+# species <- "Hyacinthoides non-scripta"
+# species <- "Erica cinerea"
+# species <- "Geranium robertianum"
+# lng <- -1.53630761358272
+# lat <- 54.6981423390006
+# colonisationRate <- 10
+# coloinisationYears <- 100
+
 # Create search area ------------------------------------------------------
 
-create_searchArea <- function(lng, lat, searchBuffer){
+create_searchAreaPolygon <- function(polygon, colonisationRate, coloinisationYears){
   
-  # lng <- -1.93359375
-  # lat <- 53.8395636788336
-  # searchBuffer <- 400
+  searchArea <- sf::st_buffer(polygon, dist = colonisationRate * coloinisationYears)
+  
+  return(searchArea)
+  
+  
+}
+
+create_searchAreaPoint <- function(lng, lat, colonisationRate, coloinisationYears){
   
   location <- sf::st_as_sf(data.frame("lng" = lng, 
                                       "lat" = lat), 
                            coords = c("lng", "lat"), 
-                           crs = sf::st_crs("ESPG:4326"), 
+                           crs = sf::st_crs(4326), 
                            dim = "XY")
-  searchArea <- sf::st_buffer(sf_df, dist = searchBuffer)
+  searchArea <- sf::st_buffer(location, dist = colonisationRate * coloinisationYears)
   
   return(searchArea)
   
@@ -22,37 +35,49 @@ create_searchArea <- function(lng, lat, searchBuffer){
 
 retrieve_GBIFOccurrences <- function(species, searchArea){
   
-  searchArea_wkt <- sf::st_as_text(searchArea$geometry)
+  occ_df <- data.frame(id = c(NA),
+                       lat = c(NA), 
+                       lon = c(NA))
   
-  # species <- "Hyacinthoides non-scripta"
+  searchArea_wkt <- sf::st_as_text(searchArea$geometry)
 
   key <- rgbif::name_backbone(name = species, kingdom = 'plants')
   
-  res <- rgbif::occ_search(taxonKey = as.numeric(key$usageKey), limit = 99999, 
-                           geometry = searchArea_wkt)
+  response <- rgbif::occ_search(taxonKey = as.numeric(key$usageKey), limit = 99999,
+                                geometry = searchArea_wkt)
   
-  return(res)
+  if(is.null(response)){
+    
+    occ_df <- data.frame(id = response$data$key,
+                         lat = response$data$decimalLatitude, 
+                         lon = response$data$decimalLongitude) |>
+      dplyr::filter(!is.na(lat) | !is.na(lon))
+    
+  } else {
+    
+    occ_df <- data.frame(id = c(NA),
+                         lat = c(NA), 
+                         lon = c(NA))
+  }
   
+  return(occ_df)
   
 }
 
 
 
-# leaflet::leaflet() |> 
+# Testing -----------------------------------------------------------------
+
+# leaflet::leaflet() |>
 #   leaflet::addTiles() |>
 #   leaflet::setView(
 #     lng = lng,
 #     lat = lat,
 #     zoom = 14
 #   ) |>
-#   leaflet::addPolygons(data = searchArea,
-#                        color = "#35B779", 
-#                        weight = 3, 
-#                        fillOpacity = 0, 
-#                        opacity = 1)
+#   leaflet::addPolygons(data = searchArea) |>
+#   leaflet::addMarkers(lng = occ_df$lon, lat = occ_df$lat)
 
-
-# Retrieve GBIF occurrences for multiple species --------------------------
 
 
 

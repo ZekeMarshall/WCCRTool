@@ -4,181 +4,169 @@ wccrtoolUI <- function(id) {
   ns <- NS(id)
   
   fluidRow(
-    column(
-      width = 12,
+    # column(
+    #   width = 12,
       shinyjs::useShinyjs(),
-
-      tabBox(
-        width = 12,
-        collapsible = FALSE,
-        id = ns("wccrtool.tabbox"),
-        
-
-# Documentation -----------------------------------------------------------
-
-        tabPanel(
-          title = "Documentation",
-          value = "documentation_tab",
-          htmltools::tags$iframe(src = "WCCRTool_documentation.html",
-                                 width = '100%',
-                                 height = 1000,
-                                 style = "border:none;") 
-        ),
-        
+      
 # Location ----------------------------------------------------------------
-        tabPanel(
-          title = "Location",
-          value = "location_tab",
-          fluidRow(
-            tags$head(
-              tags$style(HTML("input[type=number] {-moz-appearance:textfield;}
-                              input[type=number]::{-moz-appearance:textfield;}
-                              input[type=number]::-webkit-outer-spin-button,
-                              input[type=number]::-webkit-inner-spin-button {-webkit-appearance: none;margin: 0;}"))
-            ),
-            column(
-              width = 10,
-              fluidRow(
-                column(
-                  width = 2,
-                  textInput(
-                    inputId = ns("grid.ref"),
-                    label = "Grid Reference",
-                    value = NA
-                  ),
-                  style = "padding-right:0px;"
+      column(
+        width = 5,
+        bs4Dash::bs4TabCard(
+          width = 12,
+          collapsible = FALSE,
+          id = ns("location.tabbox"),
+          
+          tabPanel(
+            title = "Location",
+            value = "location_tab",
+            fluidRow(
+              leaflet::leafletOutput(
+                outputId = ns("map"),
+                width = "100%",
+                height = 850)
+              )),
+            
+            sidebar = bs4Dash::boxSidebar(
+              width = 50,
+              startOpen = FALSE,
+              background = "#f5f5f5",
+              id = ns("map.options"),
+              
+              tags$h6(tags$b("Grid Reference"), style = "color: black !important"),
+              textInput(
+                inputId = ns("grid.ref"),
+                label = NULL,
+                value = NA,
+                width = "95%"
                 ),
-                column(
-                  width = 1,
-                  actionButton(
-                    inputId = ns("grid.ref.update"),
-                    label = "Update",
-                    style = "margin-top:32px; margin-left:0px;"
-                  )
-                ),
-                column(
-                  width = 1,
-                  numericInput(
-                    inputId = ns("lon"),
-                    label = "Longitude",
-                    value = NA
-                  )
-                ),
-                column(
-                  width = 1,
-                  numericInput(
-                    inputId = ns("lat"),
-                    label = "Latitude",
-                    value = NA
-                  ),
-                  style = "padding-right:0px;"
-                ),
-                column(
-                  width = 1,
-                  actionButton(
-                    inputId = ns("lon.lat.update"),
-                    label = "Update",
-                    style = "margin-top:32px; margin-left:0px;"
-                  )
-                ),
-                column(
-                  width = 1,
-                  numericInput(
-                    inputId = ns("eastings"),
-                    label = "Eastings",
-                    value = NA
-                  )
-                ),
-                column(
-                  width = 1,
-                  numericInput(
-                    inputId = ns("northings"),
-                    label = "Northings",
-                    value = NA
-                  ),
-                  style = "padding-right:0px;"
-                ),
-                column(
-                  width = 1,
-                  actionButton(
-                    inputId = ns("e.n.update"),
-                    label = "Update",
-                    style = "margin-top:32px; margin-left:0px;"
-                  )
-                )
-              )
-            ),
-            column(
-              width = 1,
+              # tags$h6(tags$b("")),
+              actionButton(
+                inputId = ns("grid.ref.update"),
+                label = "Update",
+                style = "margin-top:5px;"
+              ),
+              tags$h6(tags$b("Longitude"), style = "color: black !important"),
+              numericInput(
+                inputId = ns("lon"),
+                label = NULL,
+                value = NA,
+                width = "95%"
+              ),
+              tags$h6(tags$b("Latitude"), style = "color: black !important"),
+              numericInput(
+                inputId = ns("lat"),
+                label = NULL,
+                value = NA,
+                width = "95%"
+              ),
+              # tags$h6(tags$b("")),
+              actionButton(
+                inputId = ns("lon.lat.update"),
+                label = "Update",
+                style = "margin-top:5px;"
+              ),
+              tags$h6(tags$b("Eastings"), style = "color: black !important"),
+              numericInput(
+                inputId = ns("eastings"),
+                label = NULL,
+                value = NA,
+                width = "95%"
+              ),
+              tags$h6(tags$b("Northings"), style = "color: black !important"),
+              numericInput(
+                inputId = ns("northings"),
+                label = NULL,
+                value = NA,
+                width = "95%"
+              ),
+              # tags$h6(tags$b("")),
+              actionButton(
+                inputId = ns("e.n.update"),
+                label = "Update",
+                style = "margin-top:5px;"
+              ),
+              tags$h6(tags$b("Map Type"), style = "color: black !important"),
               selectizeInput(
                 inputId = ns("mapType"),
-                label = "Map Type",
+                label = NULL,
                 multiple = FALSE,
                 choices = map_types,
-                selected = "Esri.WorldImagery",
-                width = "90%"
+                selected = "OpenStreetMap",
+                width = "95%"
+              ),
+              tags$h6(tags$b("Map Overlay"), style = "color: black !important"),
+              selectizeInput(
+                inputId = ns("wms_layer"),
+                label = NULL,
+                multiple = FALSE,
+                choices = wms_layers,
+                width = "95%"
               )
-            ),
-            column(
-              width = 1,
-              column(
-                width = 12,
-                selectizeInput(
-                  inputId = ns("wms_layer"),
-                  label = "Map Overlay",
-                  multiple = FALSE,
-                  choices = wms_layers,
-                  width = "90%"
-                )
-              )
-            )
-          ),
-          leaflet::leafletOutput(
-            outputId = ns("map"),
-            width = "100%",
-            height = 750
+          
           )
-        ),
         
+      )),
 
 # Survey Data -------------------------------------------------------------
-        tabPanel(
-          title = "Survey Data",
-          value = "surveyData_tab",
-          # tags$head(
-          #   tags$style(HTML(" #tabPanel { height:90vh !important; } "))
-          # ),
-          fluidRow(
-            column(width = 12,
-                   column(
-                     width = 12,
-                     tags$h6(tags$b("NVC Survey Data")) |>
-                       bsplus::bs_embed_tooltip(title = "Enter NVC Surevy Data Here", placement = "right"),
-                     
-                     rhandsontable::rHandsontableOutput(outputId = ns("surveyData_table"))
-                     
-                   )
-                                    )
-          )
-          ),
 
-
-# Species colonisation assessment -----------------------------------------
-
-          tabPanel(
-            title = "Colonisation",
-            value = "colonisation_tab",
-            fluidRow(
-              column(width = 12,
-                     column(
-                       width = 12
-                       
-                     )
+        column(
+          width = 7,
+          tabBox(
+            width = 12,
+            collapsible = FALSE,
+            id = ns("variables.tabbox"),
+            tabPanel(
+              title = "Survey Data",
+              value = "surveyData_tab",
+              # tags$head(
+              #   tags$style(HTML(" #tabPanel { height:90vh !important; } "))
+              # ),
+              fluidRow(
+                column(width = 12,
+                       column(
+                         width = 12,
+                         tags$h6(tags$b("NVC Survey Data")) |>
+                           bsplus::bs_embed_tooltip(title = "Enter NVC Surevy Data Here", placement = "right"),
+                         
+                         rhandsontable::rHandsontableOutput(outputId = ns("surveyData_table"))
+                         
+                       )
+                )
               )
-            )
-          )
+            ),
+            
+            
+            # Species colonisation assessment -----------------------------------------
+            
+            tabPanel(
+              title = "Colonisation",
+              value = "colonisation_tab",
+              fluidRow(
+                column(width = 12,
+                       column(
+                         width = 12,
+                         selectizeInput(inputId = ns("species"),
+                                        label = "Species",
+                                        multiple = FALSE,
+                                        choices = species.options,
+                                        selected = "None Selected"),
+                         numericInput(inputId = ns("colonisationRate"),
+                                      label = "Colonisation Rate [m/year]",
+                                      step = 1,
+                                      value = 4),
+                         numericInput(inputId = ns("coloinisationYears"),
+                                      label = "Colonisation Years [year]",
+                                      step = 10,
+                                      value = 100),
+                         actionButton(inputId = ns("retrieveSpeciesOccs"),
+                                      label = "Retrieve Species Occurrences")
+                         
+                       )
+                )
+              )
+            ))
+          
+        # )
         
-        
-        
-  )))
+  ))
 }

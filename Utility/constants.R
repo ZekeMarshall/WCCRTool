@@ -1,6 +1,8 @@
 # Map types for Leaflet ---------------------------------------------------
 
-map_types <- c("Esri.WorldImagery")
+# leaflet::providers
+map_types <- c("OpenStreetMap",
+               "Esri.WorldImagery")
 
 
 
@@ -29,10 +31,10 @@ wms_layers <- c(
 
 species.options <- c(
   "None Selected" = "",
-  "Erica cinerea (Bell Heather)" = "Erica cinerea (Bell Heather)",
-  "Vaccinium myrtillus (Bilberry)" = "Vaccinium myrtillus (Bilberry)",
-  "Hyacinthoides non-scripta (Bluebell)" = "Hyacinthoides non-scripta (Bluebell)",
-  "Myrica gale (Bog Myrtle)" = "Myrica gale (Bog Myrtle)")
+  "Erica cinerea (Bell Heather)" = "Erica cinerea",
+  "Vaccinium myrtillus (Bilberry)" = "Vaccinium myrtillus",
+  "Hyacinthoides non-scripta (Bluebell)" = "Hyacinthoides non-scripta",
+  "Myrica gale (Bog Myrtle)" = "Myrica gale")
 
 surveyData_df_init <- tibble::tribble(~Site, ~Species, ~Const, ~Cover,
                                       "Default", "Erica cinerea (Bell Heather)", "5", "6",

@@ -26,7 +26,12 @@ ui <- bs4Dash::dashboardPage(
       bs4Dash::bs4SidebarMenuItem("WCCRTool",
                                   tabName = "wccrtool",
                                   badgeLabel = "In Development",
+                                  badgeColor = "warning"),
+      bs4Dash::bs4SidebarMenuItem("Documentation",
+                                  tabName = "documentation",
+                                  badgeLabel = "In Development",
                                   badgeColor = "warning")
+      
     )
   ),
   body = bs4Dash::bs4DashBody(
@@ -42,6 +47,10 @@ ui <- bs4Dash::dashboardPage(
       bs4Dash::bs4TabItem(
         tabName = "wccrtool",
         wccrtoolUI(id = "wccrtool_id_1")
+      ),
+      bs4Dash::bs4TabItem(
+        tabName = "documentation",
+        documentationUI(id = "documentation_id_1")
       )
     )
   )

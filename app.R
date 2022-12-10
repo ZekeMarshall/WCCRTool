@@ -1,11 +1,12 @@
 # Load required packages
-# library(tidyverse)
+library(tidyverse)
 library(shiny)
 library(shinyjs)
 # library(shinyalert)
 # library(shinyWidgets)
 library(leaflet)
-# library(mapview)
+library(leafpm)
+library(geojsonsf)
 library(leafem)
 library(rgbif)
 library(bsplus)
@@ -31,8 +32,10 @@ source("Utility/render_docs.R", local = TRUE)
 
 # Source model function scripts
 source("R/sample_rasterData.R")
+source("R/retrieve_GBIFOccs.R")
 
 # Source App Modules
+source("Modules/documentation_ui.R")
 source("Modules/wccrtool_ui.R", local = TRUE)
 source("Modules/wccrtool_server.R", local = TRUE)
 

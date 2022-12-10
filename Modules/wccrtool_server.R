@@ -5,13 +5,22 @@ wccrtool <- function(input, output, session) {
   # Create Leaflet map ------------------------------------------------------
   
   output$map <- leaflet::renderLeaflet({
-    leaflet::leaflet() |> 
-      # leaflet::addTiles() |>
+    leaflet::leaflet() |>
       leaflet::addProviderTiles(leaflet::providers[as.character(input$mapType)] |> unname() |> unlist()) |>
       leaflet::setView(
         lng = -2.2,
         lat = 55,
         zoom = 6
+      ) |>
+      leafpm::addPmToolbar(
+        toolbarOptions = leafpm::pmToolbarOptions(drawMarker = FALSE, 
+                                                  position = "topleft"),
+        drawOptions = leafpm::pmDrawOptions(snappable = FALSE, 
+                                            allowSelfIntersection = FALSE),
+        editOptions = leafpm::pmEditOptions(preventMarkerRemoval = FALSE, 
+                                            draggable = FALSE),
+        cutOptions = leafpm::pmCutOptions(snappable = FALSE, 
+                                          allowSelfIntersection = FALSE)
       )
   })
   
@@ -75,28 +84,96 @@ wccrtool <- function(input, output, session) {
     bindEvent(input$map_click)
   
   
-  # Add search area to map ------------------------------------------------
+# Retrieve user-supplied polygon ------------------------------------------
   
-  # observe({
-  #   
-  #   if(is.na(input$searchArea)){
-  #     
-  #     leaflet::leafletProxy("map")
-  #     
-  #   } else {
-  #     
-  #     leaflet::leafletProxy("map") |>
-  #       leaflet::addPolygons(data = searchArea,
-  #                            color = "#35B779", 
-  #                            weight = 3, 
-  #                            fillOpacity = 0, 
-  #                            opacity = 1)
-  #   }
-  #   
-  # }) |>
-  #   bindEvent(input$wms_layer)
+  sitePolygon <- reactiveVal()
   
-  # Update location input boxes based on click values -----------------------
+  observe({
+    
+    feature <- input$map_draw_new_feature
+    feature_sf <- geojsonsf::geojson_sf(jsonify::to_json(feature, unbox = T))
+    sitePolygon(feature_sf)
+    
+  }) |>
+    bindEvent(input$map_draw_new_feature)
+  
+# Add search area to map -------------------------------------------------
+  
+  searchArea <- reactiveVal()
+  
+  observe({
+    
+    sitePolygon <- sitePolygon()
+    
+    sitePolygonBuffer <- create_searchAreaPolygon(polygon = sitePolygon,
+                                                  colonisationRate = input$colonisationRate,
+                                                  coloinisationYears = input$coloinisationYears)
+    
+    searchArea(sitePolygonBuffer)
+    
+  }) |>
+    bindEvent(sitePolygon(), input$colonisationRate, input$coloinisationYears, ignoreInit = TRUE)
+
+  observe({
+
+    searchArea <- searchArea()
+
+    if(is.null(searchArea)){
+
+      leaflet::leafletProxy("map")
+
+    } else {
+
+      leaflet::leafletProxy("map") |>
+        leaflet::addPolygons(data = searchArea,
+                             color = "#35B779",
+                             weight = 3,
+                             fillOpacity = 0,
+                             opacity = 1,
+                             layerId = "searchArea")
+    }
+
+  }) |>
+    bindEvent(searchArea())
+  
+# Retrieve species occurrences --------------------------------------------
+  
+  speciesOccs <- reactiveVal()
+
+  observe({
+
+    searchArea <- searchArea()
+
+    gbifResponse <- retrieve_GBIFOccurrences(species = input$species,
+                                             searchArea = searchArea)
+
+    print(gbifResponse)
+    speciesOccs(gbifResponse)
+
+  }) |>
+    bindEvent(input$retrieveSpeciesOccs)
+  
+
+# Plot species occurrences ------------------------------------------------
+
+  observe({
+
+    speciesOccs <- speciesOccs()
+
+    if(is.null(searchArea)){
+
+      leaflet::leafletProxy("map")
+
+    } else {
+
+      leaflet::leafletProxy("map") |>
+        leaflet::addMarkers(lng = speciesOccs$lon, lat = speciesOccs$lat)
+    }
+
+  }) |>
+    bindEvent(speciesOccs())
+  
+# Update location input boxes based on click values -----------------------
   
   observe({
     click <- input$map_click
