@@ -10,7 +10,7 @@ wccrtoolUI <- function(id) {
       
 # Location ----------------------------------------------------------------
       column(
-        width = 5,
+        width = 6,
         bs4Dash::bs4TabCard(
           width = 12,
           collapsible = FALSE,
@@ -110,21 +110,37 @@ wccrtoolUI <- function(id) {
 # Survey Data -------------------------------------------------------------
 
         column(
-          width = 7,
+          width = 6,
           tabBox(
             width = 12,
             collapsible = FALSE,
             id = ns("variables.tabbox"),
             tabPanel(
-              title = "Survey Data",
-              value = "surveyData_tab",
+              title = "Target Community",
+              value = "targetCommunity_tab",
               # tags$head(
               #   tags$style(HTML(" #tabPanel { height:90vh !important; } "))
               # ),
               fluidRow(
                 column(width = 12,
                        column(
-                         width = 12,
+                         width = 12, 
+                         tags$h6(tags$b("Site Status")) |>
+                           bsplus::bs_embed_tooltip(title = "Is the site a newly planted woodland, mature woodland, or ancient woodland?", placement = "right"),
+                         selectizeInput(inputId = ns("siteStatus"),
+                                        label = NULL,
+                                        multiple = FALSE,
+                                        choices = site_statuses,
+                                        width = "95%"),
+                         tags$br(),
+                         tags$h6(tags$b("Target Woodland Community")) |>
+                           bsplus::bs_embed_tooltip(title = "Select Target Community.", placement = "right"),
+                         selectizeInput(inputId = ns("targetNVC"),
+                                        label = NULL,
+                                        multiple = FALSE,
+                                        choices = nvc_woodlands,
+                                        width = "95%"),
+                         tags$br(),
                          tags$h6(tags$b("NVC Survey Data")) |>
                            bsplus::bs_embed_tooltip(title = "Enter NVC Surevy Data Here", placement = "right"),
                          
@@ -154,7 +170,7 @@ wccrtoolUI <- function(id) {
                                       label = "Colonisation Rate [m/year]",
                                       step = 1,
                                       value = 4),
-                         numericInput(inputId = ns("coloinisationYears"),
+                         numericInput(inputId = ns("colonisationYears"),
                                       label = "Colonisation Years [year]",
                                       step = 10,
                                       value = 100),

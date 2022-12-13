@@ -72,12 +72,12 @@ wccrtool <- function(input, output, session) {
   observe({
     click <- input$map_click
     
-    leaflet::leafletProxy("map") |>
-      leaflet::clearMarkers() |>
-      leaflet::addMarkers(
-        lng = click$lng,
-        lat = click$lat
-      )
+    # leaflet::leafletProxy("map") |>
+    #   leaflet::clearMarkers() |>
+    #   leaflet::addMarkers(
+    #     lng = click$lng,
+    #     lat = click$lat
+    #   )
     
     click_rval(click)
   }) |>
@@ -86,46 +86,59 @@ wccrtool <- function(input, output, session) {
   
 # Retrieve user-supplied polygon ------------------------------------------
   
-  sitePolygon <- reactiveVal()
+  sitePolygon_3857 <- reactiveVal()
+  # sitePolygon_4326 <- reactiveVal()
   
   observe({
     
     feature <- input$map_draw_new_feature
-    feature_sf <- geojsonsf::geojson_sf(jsonify::to_json(feature, unbox = T))
-    sitePolygon(feature_sf)
+    feature_sf_3857 <- geojsonsf::geojson_sf(jsonify::to_json(feature, unbox = T))
+    # feature_sf_4326 <- feature_sf_3857 |>
+    #   sf::st_transform(sf::st_crs(4326))
+
+    sitePolygon_3857(feature_sf_3857)
+    # sitePolygon_4326(feature_sf_4326)
     
   }) |>
     bindEvent(input$map_draw_new_feature)
   
-# Add search area to map -------------------------------------------------
-  
-  searchArea <- reactiveVal()
+
+# Create Search Area ------------------------------------------------------
+  searchArea_3857 <- reactiveVal()
+  searchArea_4326 <- reactiveVal()
   
   observe({
     
-    sitePolygon <- sitePolygon()
+    sitePolygon_3857 <- sitePolygon_3857()
     
-    sitePolygonBuffer <- create_searchAreaPolygon(polygon = sitePolygon,
-                                                  colonisationRate = input$colonisationRate,
-                                                  coloinisationYears = input$coloinisationYears)
+    sitePolygonBuffer_3857 <- create_searchAreaPolygon(polygon = sitePolygon_3857,
+                                                       colonisationRate = input$colonisationRate,
+                                                       colonisationYears = input$colonisationYears)
     
-    searchArea(sitePolygonBuffer)
+    sitePolygonBuffer_4326 <- sitePolygonBuffer_3857 |>
+      sf::st_transform(sf::st_crs(4326))
+    
+    searchArea_3857(sitePolygonBuffer_3857)
+    searchArea_4326(sitePolygonBuffer_4326)
     
   }) |>
-    bindEvent(sitePolygon(), input$colonisationRate, input$coloinisationYears, ignoreInit = TRUE)
+    bindEvent(sitePolygon_3857(), input$colonisationRate, input$colonisationYears, ignoreInit = TRUE)
+
+
+# Plot Search Area --------------------------------------------------------
 
   observe({
 
-    searchArea <- searchArea()
+    searchArea_3857 <- searchArea_3857()
 
-    if(is.null(searchArea)){
+    if(is.null(searchArea_3857)){
 
       leaflet::leafletProxy("map")
 
     } else {
 
       leaflet::leafletProxy("map") |>
-        leaflet::addPolygons(data = searchArea,
+        leaflet::addPolygons(data = searchArea_3857,
                              color = "#35B779",
                              weight = 3,
                              fillOpacity = 0,
@@ -134,7 +147,7 @@ wccrtool <- function(input, output, session) {
     }
 
   }) |>
-    bindEvent(searchArea())
+    bindEvent(searchArea_3857())
   
 # Retrieve species occurrences --------------------------------------------
   
@@ -142,13 +155,12 @@ wccrtool <- function(input, output, session) {
 
   observe({
 
-    searchArea <- searchArea()
+    searchArea_4326 <- searchArea_4326()
 
-    gbifResponse <- retrieve_GBIFOccurrences(species = input$species,
-                                             searchArea = searchArea)
+    occs_df <- retrieve_NBNOccurrences(species = input$species,
+                                       searchArea = searchArea_4326)
 
-    print(gbifResponse)
-    speciesOccs(gbifResponse)
+    speciesOccs(occs_df)
 
   }) |>
     bindEvent(input$retrieveSpeciesOccs)
@@ -160,14 +172,25 @@ wccrtool <- function(input, output, session) {
 
     speciesOccs <- speciesOccs()
 
-    if(is.null(searchArea)){
+    if(is.null(searchArea_3857) | nrow(speciesOccs) == 0){
 
       leaflet::leafletProxy("map")
 
     } else {
 
       leaflet::leafletProxy("map") |>
-        leaflet::addMarkers(lng = speciesOccs$lon, lat = speciesOccs$lat)
+        leaflet::clearMarkers() |>
+        leaflet::addMarkers(lng = speciesOccs$lng, lat = speciesOccs$lat,
+                            # icon = ~ icons(
+                            #   iconUrl = sprintf("https://leafletjs.com/examples/custom-icons/leaf-%s.png", group),
+                            #   iconWidth = 19, iconHeight = 42,
+                            #   iconAnchorX = 22, iconAnchorY = 94,
+                            #   popupAnchorX = -3, popupAnchorY = -76
+                            # ),
+                            popup = NULL,
+                            popupOptions = NULL,
+                            label = NULL,
+                            labelOptions = NULL)
     }
 
   }) |>

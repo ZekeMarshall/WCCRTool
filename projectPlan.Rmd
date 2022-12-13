@@ -1,0 +1,65 @@
+---
+title: "Colonisation Credit Reduction Tool - Project Plan"
+author: "Zeke Marshall"
+date: "`r Sys.Date()`"
+output: pdf_document
+bibliography: WCCRTool_references.bib
+link-citations: yes
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Load required packages
+
+# Identifies file paths
+
+# Loads required data
+
+
+```
+
+# Introduction
+
+# Dispersal
+
+To model potential dispersal we
+
+# Colonisation Criteria
+
+Taking inspiration from the restoration diagnostic framework described
+in De Vitis et al (2022) the suitability of selected species for
+assisted migration are assessed against the following criteria:
+
+-   Colonisation Sources
+
+    -   Are there areas of Ancient Woodland within colonisation
+        distance?
+
+    -   Are there areas of other woodland within colonisation distance?
+
+    -   If surveyed, is the selected species present in woodlands within
+        colonisation distance?
+
+-   Genetic Factors
+
+-   Biotic Factors
+
+    -   B1 - Does the species require an animal vector for pollination?
+
+-   Abiotic Factors \* Is the selected species suitable for the
+    environmental niche on site?
+
+-   Landscape Features
+
+    -   Are there any physical barriers to colonisation?
+
+-   Planning and Land Management Factors
+
+    -   P6 - Is it likely that the selected species will be
+        out-competed?
+
+# References

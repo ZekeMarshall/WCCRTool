@@ -39,10 +39,10 @@ body {
 }
 
 .list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
-    z-index: 2;
-    color: #ffffff;
-    background-color: #491656;
-    border-color: #491656;
+  z-index: 2;
+  color: #ffffff;
+  background-color: #491656;
+  border-color: #491656;
 }
 
 ```

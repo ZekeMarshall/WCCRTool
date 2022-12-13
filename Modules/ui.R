@@ -21,7 +21,7 @@ ui <- bs4Dash::dashboardPage(
     disable = FALSE,
     skin = "light",
     # disable = TRUE,
-    width = "225px",
+    width = "250px",
     bs4Dash::bs4SidebarMenu(
       bs4Dash::bs4SidebarMenuItem("WCCRTool",
                                   tabName = "wccrtool",

@@ -14,6 +14,7 @@ library(bs4Dash)
 library(sgo)
 library(rhandsontable)
 library(sf)
+library(sfheaders)
 # library(DT)
 # library(plotly)
 library(rmarkdown)
@@ -31,8 +32,8 @@ source("Utility/render_docs.R", local = TRUE)
 # source("Utility/menu_options.R", local = TRUE)
 
 # Source model function scripts
-source("R/sample_rasterData.R")
-source("R/retrieve_GBIFOccs.R")
+source("R/sample_rasterData.R", local = TRUE)
+source("R/retrieve_Occs.R", local = TRUE)
 
 # Source App Modules
 source("Modules/documentation_ui.R")
