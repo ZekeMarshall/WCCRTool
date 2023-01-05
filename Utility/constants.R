@@ -94,9 +94,11 @@ map_types <- c("OpenStreetMap",
 AW_color <- "#627193"
 OW_color <- "#ad4c48"
 road_color <- "#7a7a7a"
-urban_color <- "#627193"
+railways_color <- "#000000"
+rivers_color <- "#627193"
+urban_color <- "#7a7a7a"
 site_color <- "#ad9f48"
-searchArea_color <- "#ad4c48"
+searchArea_color <- "#000000"
 
 
 # WMS Constants -----------------------------------------------------------

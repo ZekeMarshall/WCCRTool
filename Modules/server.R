@@ -2,7 +2,7 @@
 
 server <- function(input, output) {
 
-  all_model_data <- callModule(module = wccrtool,
-                               id = "wccrtool_id_1")
+  all_model_data <- callModule(module = wfttool,
+                               id = "wfttool_id_1")
   
 }

@@ -11,7 +11,7 @@ ui <- bs4Dash::dashboardPage(
                                                          margin-left: auto !important;
                                                          margin-right: auto !important;")),
     
-    tags$div("Woodland Colonisation Credit Reduction Tool (WCCRTool)",
+    tags$div("Woodland Flora Translocation Tool (WFTTool)",
              style = "font-size: 25px !important;
                       color: #ffffff !important;
                       align: right !important")),
@@ -23,8 +23,8 @@ ui <- bs4Dash::dashboardPage(
     # disable = TRUE,
     width = "250px",
     bs4Dash::bs4SidebarMenu(
-      bs4Dash::bs4SidebarMenuItem("WCCRTool",
-                                  tabName = "wccrtool",
+      bs4Dash::bs4SidebarMenuItem("WFTTool",
+                                  tabName = "wfttool",
                                   badgeLabel = "In Development",
                                   badgeColor = "warning"),
       bs4Dash::bs4SidebarMenuItem("Documentation",
@@ -45,8 +45,8 @@ ui <- bs4Dash::dashboardPage(
     # Call UI component of modules
     bs4Dash::bs4TabItems(
       bs4Dash::bs4TabItem(
-        tabName = "wccrtool",
-        wccrtoolUI(id = "wccrtool_id_1")
+        tabName = "wfttool",
+        wfttoolUI(id = "wfttool_id_1")
       ),
       bs4Dash::bs4TabItem(
         tabName = "documentation",

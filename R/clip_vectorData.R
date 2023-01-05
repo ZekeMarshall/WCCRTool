@@ -12,7 +12,7 @@ clip_AWData <- function(AWData, clipArea){
     sf::st_intersection(clipArea) |>
     sf::st_transform(crs = sf::st_crs(4326))
   
-  return(AWData_clippedS)
+  return(AWData_clipped)
   
 }
 
@@ -23,6 +23,8 @@ read_NFIData <- function(NFIPath){
   
   NFIData <- sf::st_read(NFIPath)
   
+  return(NFIData)
+  
 }
 
 clip_NFIData <- function(NFIData, clipArea){
@@ -31,6 +33,102 @@ clip_NFIData <- function(NFIData, clipArea){
     sf::st_intersection(clipArea) |>
     sf::st_transform(crs = sf::st_crs(4326))
   
-  return(NFIData_clippedS)
+  return(NFIData_clipped)
   
 }
+
+
+# Roads -------------------------------------------------------------------
+
+read_roadsData <- function(roadsPath){
+  
+  roadsData <- sf::st_read(roadsPath)
+  
+  return(roadsData)
+  
+}
+
+clip_roadsData <- function(roadsData, clipArea){
+  
+  roadsData_clipped <- roadsData |>
+    sf::st_intersection(clipArea) |>
+    sf::st_transform(crs = sf::st_crs(4326))
+  
+  return(roadsData_clipped)
+  
+}
+
+
+# Railways ----------------------------------------------------------------
+
+read_railwaysData <- function(railwaysPath){
+  
+  railwaysData <- sf::st_read(railwaysPath) |>
+    dplyr::filter(ELR == "ECM5")
+  
+  return(railwaysData)
+  
+}
+
+clip_railwaysData <- function(railwaysData, clipArea){
+  
+  railwaysData_clipped <- railwaysData |>
+    sf::st_intersection(clipArea) |>
+    sf::st_transform(crs = sf::st_crs(4326))
+  
+  return(railwaysData_clipped)
+  
+}
+
+
+# Rivers ------------------------------------------------------------------
+
+read_riversData <- function(riversPath){
+  
+  riversData <- sf::st_read(riversPath)
+  
+  return(riversData)
+  
+}
+
+clip_riversData <- function(riversData, clipArea){
+  
+  riversData_clipped <- riversData |>
+    sf::st_intersection(clipArea) |>
+    sf::st_transform(crs = sf::st_crs(4326))
+  
+  return(riversData_clipped)
+  
+}
+
+
+# Urban Areas -------------------------------------------------------------
+
+read_urbanAreasData <- function(urbanAreasPath){
+  
+  urbanAreasData <- sf::st_read(urbanAreasPath)
+  
+  return(urbanAreasData)
+  
+}
+
+clip_urbanAreasData <- function(urbanAreasData, clipArea){
+  
+  urbanAreasData_clipped <- urbanAreasData |>
+    sf::st_intersection(clipArea) |>
+    sf::st_transform(crs = sf::st_crs(4326))
+  
+  return(urbanAreasData_clipped)
+  
+}
+
+
+# Woody linear features ---------------------------------------------------
+
+
+
+
+
+
+
+

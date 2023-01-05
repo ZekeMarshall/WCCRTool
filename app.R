@@ -23,6 +23,11 @@ library(rmarkdown)
 # library(htmltools)
 # library(htmlwidgets)
 # library(hablar)
+library(elevatr)
+
+
+
+# !!! All the GEOS functions underlying sf need projected coordinates to work properly
 
 # Source utility scripts
 source("Utility/constants.R", local = TRUE)
@@ -34,11 +39,12 @@ source("Utility/render_docs.R", local = TRUE)
 # Source model function scripts
 source("R/sample_rasterData.R", local = TRUE)
 source("R/retrieve_Occs.R", local = TRUE)
+source("R/spatialOperations.R", local = TRUE)
 
 # Source App Modules
 source("Modules/documentation_ui.R")
-source("Modules/wccrtool_ui.R", local = TRUE)
-source("Modules/wccrtool_server.R", local = TRUE)
+source("Modules/wfttool_ui.R", local = TRUE)
+source("Modules/wfttool_server.R", local = TRUE)
 
 # Source UI and Server App Modules
 source("Modules/ui.R", local = TRUE)

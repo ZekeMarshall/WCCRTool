@@ -1,30 +1,3 @@
-# Create search area ------------------------------------------------------
-
-create_searchAreaPolygon <- function(polygon, colonisationRate, colonisationYears){
-  
-  searchArea <- sf::st_buffer(polygon, 
-                              dist = colonisationRate * colonisationYears, 
-                              joinStyle = "ROUND")
-  
-  return(searchArea)
-  
-  
-}
-
-create_searchAreaPoint <- function(lng, lat, colonisationRate, colonisationYears){
-  
-  location <- sf::st_as_sf(data.frame("lng" = lng, 
-                                      "lat" = lat), 
-                           coords = c("lng", "lat"), 
-                           crs = sf::st_crs(4326), 
-                           dim = "XY")
-  searchArea <- sf::st_buffer(location, dist = colonisationRate * colonisationYears)
-  
-  return(searchArea)
-  
-  
-}
-
 # Retrieve GBIF occurrences for a single species --------------------------
 
 retrieve_GBIFOccurrences <- function(species, searchArea){
@@ -71,55 +44,61 @@ retrieve_NBNOccurrences <- function(species, searchArea){
   searchArea_rectangle_wkt <- sf::st_as_text(searchArea_rectangle$geometry)
   
   # Make API call
-  raw.result <- httr::GET(url = "https://records-ws.nbnatlas.org/occurrence/facets?",
-                          # httr::verbose(),
-                          query = list("q"= species,
-                                       "facets" = "taxon_name,latitude,longitude",
-                                       "wkt" = searchArea_rectangle_wkt)
+  response <- httr::GET(url = "https://records-ws.nbnatlas.org/occurrence/facets?",
+                        # httr::verbose(),
+                        query = list("q"= species,
+                                     "facets" = "taxon_name,latitude,longitude", #,coordinatePrecision,dateIdentified",
+                                     "wkt" = searchArea_rectangle_wkt)
   )
   
   # Unpack API response
-  raw.result.content <- httr::content(raw.result)
+  response.content <- httr::content(response)
   
-  if (length(raw.result.content) == 0) {
+  if (length(response.content) == 0) {
     
-    occs_df <- tibble::tribble(~lng, ~lat)
+    response_df <- tibble::tribble(~lng, ~lat)
     
   } else {
     
-    # https://www.r-bloggers.com/2018/10/converting-nested-json-to-a-tidy-data-frame-with-r/
-    # raw.result.content_df <- tibble::enframe(unlist(raw.result.content))
+    response.content_nested <- jsonify::to_json(response.content, unbox = T) |>
+      jsonlite::fromJSON() |>
+      dplyr::select(-count) |>
+      tidyr::pivot_wider(names_from = fieldName,
+                         values_from = fieldResult)
     
-    raw.result.content_nested_df <- jsonlite::fromJSON(base::rawToChar(raw.result$content))
+    response.latitude <- response.content_nested$latitude[[1]] |>
+      dplyr::pull(label)
     
-    raw.result.content_df <- data.frame(
-      lng = raw.result.content_nested_df$fieldResult[[3]]$label, 
-      lat = raw.result.content_nested_df$fieldResult[[2]]$label
-    )
+    response.longitude <- response.content_nested$longitude[[1]] |>
+      dplyr::pull(label)
+    
+    response_df <- data.frame("lng" = response.longitude,
+                              "lat" = response.latitude)
+    
+      
+    
+    # response.content_nested <- jsonlite::fromJSON(base::rawToChar(response$content))
+    # raw.result.content_df <- data.frame(
+    #   # dateIdentified = raw.result.content_nested_df$fieldResult[[5]]$label,
+    #   # coordinatePrecision = raw.result.content_nested_df$fieldResult[[4]]$label,
+    #   lng = raw.result.content_nested_df$fieldResult[[3]]$label, 
+    #   lat = raw.result.content_nested_df$fieldResult[[2]]$label
+    # )
     
     # Convert to sf list of points
-    occs_sf <- raw.result.content_df |>
+    occs_sf <- response_df |>
       sf::st_as_sf(coords = c("lng", "lat"), 
                    crs = sf::st_crs(4326), 
-                   dim = "XY") #|>
-      #sf::st_transform(crs = sf::st_crs(3857))
-    
-    # searchArea_3857 <- searchArea |>
-    #   sf::st_transform(crs = sf::st_crs(3857))
+                   dim = "XY") 
     
     # Filter SF point occurrences
     occs_sf_cropped <- occs_sf #|>
-     # sf::st_intersection(searchArea)
+     #sf::st_intersection(searchArea)
     
-    # Convert to data frame
-    occs_df <- occs_sf_cropped |> 
-      sf::st_coordinates() |>
-      as.data.frame() |>
-      dplyr::rename("lng" = "X", "lat" = "Y")
     
   }
   
-  return(occs_df)
+  return(occs_sf)
   
 }
 
