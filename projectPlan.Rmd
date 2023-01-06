@@ -3,76 +3,114 @@ title: "Woodland Flora Translocation Tool"
 subtitle: "Project Proposal"
 author: "Zeke Marshall"
 date: "`r Sys.Date()`"
-output: pdf_document
+output: 
+  pdf_document:
+    includes:
+      in_header: "projectPlan_preamble.tex"
 bibliography: WCCRTool_references.bib
 link-citations: yes
 editor_options: 
   markdown: 
     wrap: 72
-header-includes:
-  \usepackage{titling}
-  \setlength{\droptitle}{-8ex}
-  \pretitle{\begin{flushleft}\huge\bfseries}
-  \posttitle{\par\end{flushleft}}
-  \preauthor{\begin{flushleft}}
-  \postauthor{\end{flushleft}}
-  \predate{\begin{flushleft}}
-  \postdate{\end{flushleft}}
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
 # Load required packages
+library(kableExtra)
 
 # Identifies file paths
 
 # Loads required data
+source("collateAvailableSpp.R")
 
 
 ```
 
 # Introduction
 
-New woodland creation, planting rates, 
+The majority of vascular plant diversity in temperate woodlands existed
+in the understory.
 
-on species poor former arable land
+Need to ... biodiversity.
 
+The UK's target of ... woodland creation
 
+In in the 2021/2022 planting season 6970 hectares of broadleaved
+woodland were created in the UK [@maxwell2022].
+
+Legacy of woodland creation without management plans in place to ensure
+...
 
 Our understanding of how the composition of traits within a community of
 organisms scales to constitute and influence ecosystem functioning
-[@chacnabella2022] is a developing field. As argued by @smith2017, a
-proactive approach must be taken in ecosystem restoration....
+[@chacnabella2022] is a developing field, lacking ....
 
-The assisted colonisation of newly planted woodlands is critically needed.
-This is particularly important for Ancient Woodland Indicator (AWI) 
-species, which are generally observed to have very low dispersal rates,
-attributable to traits such as high seed weight [@kimberley2013]
-Examples include 
-*Anemone nemorosa* which ... ; 
-*Hyacinthoides non-scripta* with observed 
+Woodland establishment for ecological restoration 
+
+colonisation credit [@watts2020]
+
+Where spatio-temporal barriers to migration exist, the self-assembly of
+woodland understory communities cannot be relied upon, necessitating a
+proactive approach must be taken in ecosystem restoration [@smith2017].
+
+Such a stance, namely the promotion of translocation assisted colonisation to newly
+planted woodlands with dispersal-limited understory flora is an
+increasingly recognised management need in woodland creation schemes;
+with the Woodland Trust making the need to *"Establish Richer
+Communities"* explicit in their Woodland Creation Guide [@herbert2022].
+Practically, organisations such as Eadha Enterprises now operate
+woodland understory flora nurseries [@eadhaNursery] and offer ecological
+site survey services for understory species translocation suitability
+[@eadhaServices]. Centralised guidance has also recently been developed
+in the form of the NatureScot Research Report *Establishing woodland
+plants in broadleaved woods - interim best practice guidance for
+conservation translocations* [@worrell2021]. Despite such advancements, there is 
+still a distinct lack of UK-wide guidance.
 
 # Aims
 
-In response the a R Shiny [@rcoreteam2022, @chang2022] web application will 
-developed. This application will act as a Decision Support Tool (DSS), 
-aiding users to examine the suitability of a woodland plant translocation
-initiative in a standardised framework.
+In response to this growing need for management advice the development of an 
+R Shiny [@rcoreteam2022; @chang2022] web application is proposed. 
+This application will act as a Decision Support Tool (DSS), 
+aiding users in examining the suitability of woodland under-story
+flora for translocation to a target woodland site.
+The application will synthesise the analysis results with additional user inputs
+to generate a report using a pro-forma which be developed based on the 
+Scottish code for translocations project form [@naturescot2014].
 
-# Adherence to Regulation and Best Guidance
+A two-stage development strategy is proposed:
 
-The ...
+1.  A functional proof-of-concept tool.
+    -   Using the current best available data.
+    -   Developed as part of a scoping exercise by the author.
+    -   No specific project funding.
+2.  A comprehensive tool.
+    -   Using data derived from additional analysis.
+    -   Developed with a project team.
+    -   Specific project funding (to be obtained).
+
+The methodologies outlined in the Analysis Process section below correspond to 
+development stage 1, with the additional analyses proposed for development stage
+2 described in section A3 - Stage 2 Development.
+
+It is hoped that the development stage 1 application will be opened to 
+user-testing, with the view to collating feedback to inform development 
+priorities for stage 2.
+
+# Analysis Process
+
+Following the ....
 
 -   Decide whether a conservation translocation is appropriate
 -   Increase the chance of success and wider potential benefits
 -   Reduce the chance of failure and negative outcomes
 
-
-# Colonisation Criteria
+The framework laid out in @worrell2021 will be adopted...
 
 Taking inspiration from the restoration diagnostic framework described
-in @deVitis2022 the suitability of selected species for assisted
+in [@deVitis2022] the suitability of selected species for assisted
 migration are assessed against the following criteria:
 
 -   Colonisation Sources
@@ -105,102 +143,216 @@ migration are assessed against the following criteria:
 
 \newpage
 
-# Analysis Process
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.cap="A flow diagram representing the proposed analysis workflow."}
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-
-knitr::include_graphics("WCCRTool_flowDiagram_v1.jpg") 
+knitr::include_graphics("WFTTool_stage1.jpg") 
 
 ```
 
 \newpage
 
-## Community Suitability
-
 @worrell2021 recommends that a four-step process be undertaken to
-examine the necessity of woodland flora translocation, namely the examination 
-of: 
+examine the necessity of woodland flora translocation, namely the
+examination of:
 
-1. *Which species are already present in the target woodland?*
-2. *Which plant species are already present in adjacent woodland and habitats?*
-3. *Which species would naturally occur in the wood?*
-4. *Which species are missing from the woodland and nearby linked habitats?*
+1.  *Which species are already present in the target woodland?*
+2.  *Which plant species are already present in adjacent woodland and
+    habitats?*
+3.  *Which species would naturally occur in the wood?*
+4.  *Which species are missing from the woodland and nearby linked
+    habitats?*
 
-Following this guidance...
+Following this guidance, we define four key criteria which determine
+translocation suitability:
 
-To assess which species would
+1.  Niche Suitability
+2.  Community Suitability
+3.  Migration Probability
+4.  Distribution Suitability
 
 ## Niche Suitability
 
 To examine whether a selected species is suitable for the sites specific
-biogeoclimatic conditions, the MultiMOVE plan species niche models 
-[@henrys2015paper;@henrys2015model;@smart2019] will be utilised in conjunction 
-with baseline (1961-1990) climate data derived from ...; 
-along with future climate projections obtained from the CHESS-SCAPE dataset 
-[@robinson2022]. These 1km resolution datasets will be down-scaled using the 
-{microclimc} R package [@maclean2021]. 
+biogeoclimatic conditions, the multiMOVE plant species niche models
+[@henrys2015paper; @henrys2015model; @smart2019] will be utilised in
+conjunction with baseline (1961-1990) climate data along with future climate 
+projections obtained from the CHESS-SCAPE dataset [@robinson2022] for the annual
+average rainfall, minimum January temperature, and maximum July temperature.
+The Forest Research ESC soil survey data will be used, with the 'Soil Wetness', 
+'Substrate Fertility' MultiMOVE niche metrics mapped to the (Soil Nutrient 
+Regime) and SMR (Soil Moisture Regime) values.
 
-Soils data will be obtained from ... 
+## Community Suitability
 
-Elevation, slope, and aspect data will be obtained from ...
+To assess whether the selected species is sociologically suited to the
+community of flora present, or desired community at the selected woodland, 
+two options will made available to the user:
 
-To account for the influence of woodland stage development on site
-conditions, and niche suitability the user will be able to stipulate a
-proportion of canopy cover....
+1.  Selection of a target National Vegetation Classification (NVC) community.
+2.  Assessment of the closest NVC woodland communities already present.
+
+To facilitate option 2, an R implementation of the Modular Analysis of 
+Vegetation Information System (MAVIS) will be utilised, requiring the user to 
+enter NVC survey data for the target woodland.
+
+The presence of the selected species will then be cross-referenced against the
+closest fitted NVC communities to the survey data for phytosociological
+suitability.
 
 ## Migration Probability
 
-To determine the probability that a species will successfully migrate from a 
-nearby source (if present), two methods are proposed:
+To determine the likelihood that the selected species will successfully migrate
+from a nearby source (if present) to the target woodland, 
+the maximum dispersal distance (MDD) will be
+calculated by taking the product of the yearly MDD, and user-defined time period 
+(measured in years). This distance will then be compared to the distance between
+the target woodland, and source populations of the selected species obtained
+through survey data entry and retrieval of species occurrence
+data from the NBN Atlas [@nbnatlas2023] application programming interface (API). 
 
-**Method A**
+Estimations of the yearly MDD will obtained through a
+literature review and estimation using the {dispeRsal} R package
+[@tamme2014].
 
-1. Estimate the maximum yearly dispersal distance, with upper and lower bounds
-for selected species.
-2. Identify barriers to migration (roads, urban areas, large water bodies etc)
-3. Perform a 
+The user will then select the time period over which to examine
+dispersal likelihood, with three options available:
 
-**Method B**
+1.  An estimate for the optimum successional age (in years) for the
+    selected species, measured from the disturbance/establishment time
+    of the target woodland derived from @chytr2021.
+2.  The difference between the age of the target woodland, and an ecological
+    restoration target age.
+3.  A custom, user-stipulated value.
 
-1. Parametrise a dispersal kernel for selected species.
-2. Identify barriers to migration (roads, urban areas, large water bodies etc)
-3. Perform a focal analysis.
-
+Barriers to migration such as roads, paths, rivers, trainlines, and urban areas
+will be assessed as obstacles based on the path of migration and dispersal symdrome.
+In the case 
+See Figure 2 for a provisional representation of how the migration factors will 
+be communicated to the user.
 
 ## Distribution Suitability
 
-To determine whether the site is within the distribution of the selected species
-.....
+To determine whether the target woodland is within the distribution of
+the selected species permission is currently being sought from the Botanical 
+Society of Britain \& Ireland for use of their distribution data.
 
-# Analysis Results
+## Survey Data
 
-## Species Suitability
+The user will be able to use the tool without inputting any survey data, however 
+the results will be insufficiently rigorous to inform translocation suitability,
+being reliant on only a user-stipulated target community and NBN occurrence data.
+For a rigorous assessment, the user will be required to input NVC survey data
+for the target woodland, and species presence data for ancient woodlands, other
+woodlands, scrub habitat, and hedgerows in the vicinity. 
 
-It is proposed that the selected species will be recommended for translocation
-(or conservatively further investigation) if it is:
+## Selected Species
 
-1.  Absent from the site.
-2.  Present in the target community.
+A limited subset of species will be included in stage 1 of the
+application. This selection will be determined by the available data,
+with species selected if they are: 
+1) present in the NVC floristic tables for communities W1 - W18e; 
+2) present in the MultiMOVE niche models; and
+3) used as Ancient Woodland Indicators, as determined by @glaves2009survey. 
+The application of these criteria results in the selection
+of `r combined_df_selected_speciesCount` species. 
+Only `r combined_df_selected_dispeRsalCount` of these species are represented in
+the baseline {dispeRsal} data, necessitating estimation of the MDD by traits at 
+the genus or family level, or manually through a literature review if
+possible. See [Section A2 - Selected Species](#selected_species_table) for a 
+list of proposed species.
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', out.width="75%", fig.cap="A screenshot of the interactive map interface taken from the prototype application."}
+
+knitr::include_graphics("leaflet_screenshot.jpg") 
+
+```
+
+
+## Analysis Results
+
+Following assessment against the aforementioned four criteria, it is proposed 
+that the selected species will be recommended for translocation or assisted
+colonisation (or conservatively further investigation) if it is:
+
+1.  Absent from the target woodland site.
+2.  Present in the closest, or target community.
 3.  Suitable to the sites local biogeoclimatic conditions, at a given
     stage of woodland development.
 4.  Estimated to be unlikely to naturally migrate to the site within a
     reasonable time frame.
-5. Within the known distribution of the species.
+5.  Within the known distribution of the species.
 
-## Ecological Impact
 
-Following the suggestion in @smith2017, the ecological impact of
-translocating a species must be considered, as such the user will also
-be presented with an interactive network diagram displaying the
-ecological network of the species under assessment.
+\newpage
 
 # Appendix
 
-## Project Personal
+## A1 - Project Personal
 
-## Proposed Species
+It is proposed that an advisory committee be established to guide stage 1 of the
+applications development. It is proposed that funding is allocated to cover the 
+time of all project personal for stage 2.
+
+Current participants include:
+
+-   Zeke Marshall, Forest Research - Lead developer.
+-   Simon Smart, UK Centre for Ecology & Hydrology (UKCEH) - Advisor
+-   Paul Smith, University of Bristol - Advisor
+
+## A2 - Selected Species {#selected_species_table}
+
+```{r proposed_species_table, echo=FALSE, message=FALSE, warning=FALSE, results='asis'}
+
+kableExtra::kbl(x = combined_df_selected, format = "latex", booktabs = TRUE,
+                longtable = TRUE,
+                caption = "The species selected for stage 1 of the WFTTool.")  %>%
+  kableExtra::kable_styling(latex_options = c("scale_down", "repeat_header", "HOLD_position"))
+
+```
+
+## A3 - Stage 2 Development
+
+### A3i - Niche Suitability
+
+There are a number of potential developments for the niche suitability analysis.
+Firstly, species absent in MultiMOVE but present in the NVC floristic tables
+could be examined.
+Secondly, using Forest Research soil survey data and derived datasets for 
+SMR and SNR, the MultiMOVE niche models could be expanded to assess the 
+'Soil Wetness' and 'Substrate Fertility' variables independently, rather than as 
+a function of the community-weighted mean Hill-Ellenberg values.
+Thirdly, a Bayesian approach could be taken to integrate species occurrence
+and more comprehensive presence-absence survey data following @morera-pujol2022,
+additionally further survey data could be added.
+Fourthly, the 1km resolution climatic data used to identify the site conditions 
+could be down-scaled using the {microclimc} R package [@maclean2021], to
+account for the influence of woodland structure on microclimate.
+
+### A3ii - Community Suitability
+
+Further development of the community suitability analysis could include
+examination of species absent from the NVC floristic tables and/or
+inclusion of a community classification system other than the NVC, e.g. the UK 
+Habitat Classification System.
+  
+### A3iii - Migration Probability
+
+It is likely that the largest source of uncertainty in the analysis is the 
+examination of the likelihood of migration. There are several avenues which 
+could be explored to improve this methodology. 
+Firstly, the probability of successful migration could be calculated using a 
+probability density function such as the total dispersal kernel [@rogers2019].
+Such functions could be estimated using empirical data [@bullock2016] 
+where available. This approach is necessary for capturing the uncertainty
+inherent in estimating dispersal distance, particulalry for zoochory-mediated
+dispersal with fat-tailed probabili ........... and for correctly representing species
+with sequential dispersal syndromes such as *Mercurialis perennis*, the seeds of 
+which are first dispersed ballistically as estimated in @tamme2014, but are then
+also dispersed by ants [@jefferson2008].
+
+### A3iv - Distribution Suitability
+
+Further development of the distribution suitability analysis could include....
 
 # References
-
-
-

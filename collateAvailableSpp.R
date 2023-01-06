@@ -56,16 +56,61 @@ multiMOVE_species <- unique(BRCtable$BRC_Name)
 multiMOVE_df <- data.frame("species" = multiMOVE_species, "multiMOVE" = "Yes")
 
 
+# disperSal ---------------------------------------------------------------
+
+dispeRsal.data_path <- file.path("C:/Users/User/OneDrive - University of Leeds/Silviculture/NVC/Literature",
+                                 "/Tamme et al (2014) - Predicting species' maximum dispersal distances from simple plant traits",
+                                 "dispeRsal.rda")
+
+load(file = dispeRsal.data_path)
+
+dispeRsal_df <- model.data |>
+  dplyr::select(Species) |>
+  dplyr::rename("species" = "Species") |>
+  dplyr::mutate("dispeRsal" = "Yes")
+
+
+# Resolve Taxonomy --------------------------------------------------------
+
+
+
+
 # Combine Data ------------------------------------------------------------
 
-combined_df <- bsbiInv_df |>
+combined_df_bsbi <- bsbiInv_df |>
   dplyr::full_join(nvcFT_df, by = "species") |>
   dplyr::full_join(indAW_df, by = "species") |>
   dplyr::full_join(plantATT_df, by = "species") |>
-  dplyr::full_join(multiMOVE_df, by = "species")
+  dplyr::full_join(multiMOVE_df, by = "species") |>
+  dplyr::full_join(dispeRsal_df, by = "species") |>
+  dplyr::arrange(species)
+rownames(combined_df_bsbi) <- NULL
 
-combined_df_indAW <- combined_df |>
-  dplyr::filter(indAW == "Yes")
+combined_df_nvc <- nvcFT_df |>
+  dplyr::full_join(indAW_df, by = "species") |>
+  dplyr::full_join(plantATT_df, by = "species") |>
+  dplyr::full_join(multiMOVE_df, by = "species") |>
+  dplyr::full_join(dispeRsal_df, by = "species") |>
+  dplyr::arrange(species)
+rownames(combined_df_nvc) <- NULL
 
-rownames(combined_df_indAW) <- NULL
+combined_df_selected <- combined_df_nvc |>
+  dplyr::filter(nvcFT == "Yes" & 
+                multiMOVE == "Yes",
+                indAW == "Yes") |>
+  dplyr::mutate_at(c("nvcFT", "indAW", "plantATT", "multiMOVE", "dispeRsal"), ~tidyr::replace_na(., ""))
+
+
+combined_df_selected_speciesCount <- combined_df_selected |>
+  dplyr::count(species)
+combined_df_selected_speciesCount <- nrow(combined_df_selected_speciesCount)
+
+
+combined_df_selected_dispeRsalCount <- combined_df_selected |>
+  dplyr::count(dispeRsal) |>
+  dplyr::filter(dispeRsal == "Yes") |>
+  dplyr::pull(n)
+
+
+
 
