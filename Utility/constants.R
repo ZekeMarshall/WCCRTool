@@ -86,7 +86,8 @@ nvc_woodlands <- c(
 
 # leaflet::providers
 map_types <- c("OpenStreetMap",
-               "Esri.WorldImagery")
+               "Esri.WorldImagery",
+               "Thunderforest.Outdoors")
 
 
 # Map color scheme --------------------------------------------------------
@@ -126,10 +127,7 @@ wms_layers <- c(
 
 species.options <- c(
   "None Selected" = "",
-  "Erica cinerea (Bell Heather)" = "Erica cinerea",
-  "Vaccinium myrtillus (Bilberry)" = "Vaccinium myrtillus",
-  "Hyacinthoides non-scripta (Bluebell)" = "Hyacinthoides non-scripta",
-  "Myrica gale (Bog Myrtle)" = "Myrica gale")
+  "Mercurialis perennis (Dog's Mercury)" = "Mercurialis perennis")
 
 surveyData_df_init <- tibble::tribble(~Site, ~Species, ~Const, ~Cover,
                                       "Default", "Erica cinerea (Bell Heather)", "5", "6",

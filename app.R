@@ -2,6 +2,7 @@
 library(tidyverse)
 library(shiny)
 library(shinyjs)
+# library(shinycssloaders)
 # library(shinyalert)
 # library(shinyWidgets)
 library(leaflet)
@@ -25,9 +26,15 @@ library(rmarkdown)
 # library(hablar)
 library(elevatr)
 
+# Required for dispeRsal
+library(AICcmodavg)
+library(nlme)
+#
+library(rgbif)
 
 
 # !!! All the GEOS functions underlying sf need projected coordinates to work properly
+
 
 # Source utility scripts
 source("Utility/constants.R", local = TRUE)
@@ -36,9 +43,17 @@ source("Utility/render_docs.R", local = TRUE)
 # source("Utility/utility_functions.R", local = TRUE)
 # source("Utility/menu_options.R", local = TRUE)
 
+# Load required data
+osa_data <- read.csv(file = optimal.successional.age_path)
+dispeRsal_data <- load(file = dispeRsal.data_path, envir = sys.frame())
+rm(dispeRsal)
+source(dispeRsal.func_path)
+
 # Source model function scripts
 source("R/sample_rasterData.R", local = TRUE)
-source("R/retrieve_Occs.R", local = TRUE)
+source("R/retrieveOccs.R", local = TRUE)
+source("R/retrieveMDD.R", local = TRUE)
+source("R/retrieveOSA.R", local = TRUE)
 source("R/spatialOperations.R", local = TRUE)
 
 # Source App Modules

@@ -1,6 +1,54 @@
 wfttool <- function(input, output, session) {
   
   ns <- session$ns
+
+# Update colonisation rate ------------------------------------------------
+  
+  observe({
+    
+    if(input$species == ""){
+      
+      
+    } else {
+      
+      mdd <- retrieveMDD(species = input$species,
+                         prediction_level = "family")# |>
+        # shinycssloaders::withSpinner(color="#6c207f")
+      
+      # Update
+      updateNumericInput(session,
+                         inputId = "colonisationRate",
+                         value = as.numeric(mdd)
+      )
+      
+    }
+
+  }) |>
+    bindEvent(input$species)
+
+
+# Update colonisation years -----------------------------------------------
+
+  observe({
+    
+    if(input$species == ""){
+      
+      
+    } else {
+
+      osa <- retrieveOSA(species = input$species) #|>
+        # shinycssloaders::withSpinner(color="#6c207f")
+  
+      # Update
+      updateNumericInput(session,
+                         inputId = "colonisationYears",
+                         value = as.numeric(osa)
+      )
+    
+    }
+    
+  }) |>
+    bindEvent(input$species)
   
   # Create Leaflet map ------------------------------------------------------
   
@@ -105,12 +153,14 @@ wfttool <- function(input, output, session) {
   }) |>
     bindEvent(input$map_draw_new_feature)
   
-
 # Create Search Area ------------------------------------------------------
-  searchArea_3857 <- reactiveVal()
-  searchArea_4326 <- reactiveVal()
   
-  observe({
+   searchArea_3857 <- reactiveVal()
+   searchArea_4326 <- reactiveVal()  
+  
+   observe({
+    
+    req(sitePolygon_3857())
     
     sitePolygon_3857 <- sitePolygon_3857()
     
@@ -126,7 +176,65 @@ wfttool <- function(input, output, session) {
     
   }) |>
     bindEvent(sitePolygon_3857(), input$colonisationRate, input$colonisationYears, ignoreInit = TRUE)
+    # bindEvent(input$set_buffer, ignoreInit = TRUE)
+  
+  
 
+# Create Forest Habitat Network -------------------------------------------
+  
+  woodlandsNFI <- reactiveVal()
+  
+  observe({
+    
+    req(searchArea_4326())
+    
+    searchArea_4326 <- searchArea_4326()
+    
+    searchArea_bbox <- sf::st_bbox(searchArea_4326)
+    
+    # print(searchArea_bbox)
+    
+    nfiAPIResponse <- queryNFIAPI(lonleft = searchArea_bbox$xmin, 
+                                  lonright = searchArea_bbox$xmax, 
+                                  latbot = searchArea_bbox$ymin, 
+                                  lattop = searchArea_bbox$ymax)
+    
+    print(nfiAPIResponse)
+    
+    woodlandsNFI(nfiAPIResponse)
+    
+  }) |>
+    bindEvent(input$retrieveForHabNet, ignoreInit = TRUE)
+  
+  
+
+# Plot Forest Habitat Network ---------------------------------------------
+
+  observe({
+    
+    woodlandsNFI <- woodlandsNFI()
+    
+    if(is.null(woodlandsNFI)){
+      
+      leaflet::leafletProxy(mapId = "map")
+      
+    } else {
+      
+      leaflet::leafletProxy(mapId = "map") |>
+        leaflet::addPolygons(data = woodlandsNFI,
+                             color = "#748802",
+                             weight = 3,
+                             fillOpacity = 0.75,
+                             opacity = 1,
+                             layerId = ~OBJECTID_1,
+                             popup = paste("NFI ID: ", woodlandsNFI$OBJECTID_1, "<br>",
+                                           "Woodland Category: ", woodlandsNFI$IFT_IOA, "<br>"))
+    }
+    
+  }) |>
+    bindEvent(woodlandsNFI())
+  
+    
 
 # Plot Search Area --------------------------------------------------------
 

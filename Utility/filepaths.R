@@ -16,3 +16,17 @@ rivers_path <- file.path(data_path, "rivers/oprvrs_gpkg_gb/data/oprvrs_gb.gpkg")
 
 # hedgerows_path <- file.path(data_path, )
 
+
+
+# dispeRsal data and functions --------------------------------------------
+
+dispeRsal.data_path <- file.path("Data/dispeRsal.rda")
+
+dispeRsal.func_path <- file.path("Data/dispeRsal_mod.R")
+
+optimal.successional.age_path <- "Data/Optimum_successional_age.csv"
+
+# NVC Floristic Tables ----------------------------------------------------
+
+
+
