@@ -12,6 +12,11 @@ lat_testOcc <- 54.699
 colonisationRate <- 10
 colonisationYears <- 100
 
+lonleft = -1.749058
+lonright = -1.711675
+latbot = 54.49248
+lattop = 54.50931
+
 
 # Establish location as sf point
 location <- sf::st_as_sf(data.frame("lng" = lng, 

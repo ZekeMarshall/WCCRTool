@@ -100,6 +100,8 @@ rivers_color <- "#627193"
 urban_color <- "#7a7a7a"
 site_color <- "#ad9f48"
 searchArea_color <- "#000000"
+  
+landscape_raster_cols <- c("#748802")
 
 
 # WMS Constants -----------------------------------------------------------

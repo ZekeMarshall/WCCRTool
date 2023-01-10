@@ -144,6 +144,8 @@ wfttool <- function(input, output, session) {
     feature_json <- jsonify::to_json(feature, unbox = T)
 
     feature_sf <- sf::st_read(feature_json, quiet = TRUE)
+    
+    saveRDS(object = feature_sf, file = "testing/user_woodland_sf.rds")
 
     feature_sf_3857 <- feature_sf |>
       sf::st_transform(sf::st_crs(3857))
@@ -170,6 +172,8 @@ wfttool <- function(input, output, session) {
     
     sitePolygonBuffer_4326 <- sitePolygonBuffer_3857 |>
       sf::st_transform(sf::st_crs(4326))
+    
+    saveRDS(object = sitePolygonBuffer_4326, file = "testing/sitePolygonBuffer_4326.rds")
     
     searchArea_3857(sitePolygonBuffer_3857)
     searchArea_4326(sitePolygonBuffer_4326)
@@ -270,6 +274,8 @@ wfttool <- function(input, output, session) {
 
     occs_sf <- retrieve_NBNOccurrences(species = input$species,
                                        searchArea = searchArea_4326)
+    
+    saveRDS(object = occs_sf, file = "testing/occs_sf.rds")
 
     speciesOccs(occs_sf)
 

@@ -3,11 +3,6 @@ queryNFIAPI <- function(lonleft, lonright, latbot, lattop){
   
   nfi_api_url <- "https://services2.arcgis.com/mHXjwgl3OARRqqD4/arcgis/rest/services/Nationa_Forest_Inventory_Woodland_GB_2020/FeatureServer/0/query?"
   
-  # lonleft = -2.143
-  # lonright = 54.406
-  # latbot = -1.849
-  # lattop = 54.476
-  
   query_url <- paste0("where=", "1%3D1", "&",
                       "outFields=", "*", "&",
                       "geometry=", lonleft, "%2C", latbot, "%2C", lonright, "%2C", lattop, "&",

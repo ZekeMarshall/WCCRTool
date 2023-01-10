@@ -39,18 +39,15 @@ library(rgbif)
 # Source utility scripts
 source("Utility/constants.R", local = TRUE)
 source("Utility/filepaths.R", local = TRUE)
+source("Utility/load_data.R", local = TRUE)
 source("Utility/render_docs.R", local = TRUE)
 # source("Utility/utility_functions.R", local = TRUE)
 # source("Utility/menu_options.R", local = TRUE)
 
-# Load required data
-osa_data <- read.csv(file = optimal.successional.age_path)
-dispeRsal_data <- load(file = dispeRsal.data_path, envir = sys.frame())
-rm(dispeRsal)
-source(dispeRsal.func_path)
 
 # Source model function scripts
 source("R/sample_rasterData.R", local = TRUE)
+source("R/queryNFIAPI.R", local = TRUE)
 source("R/retrieveOccs.R", local = TRUE)
 source("R/retrieveMDD.R", local = TRUE)
 source("R/retrieveOSA.R", local = TRUE)
